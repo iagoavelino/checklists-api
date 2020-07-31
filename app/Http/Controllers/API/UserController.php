@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['store']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +41,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'unique:users,email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
 
@@ -70,7 +76,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+        return new UserResource($user);
     }
 
     /**
@@ -82,7 +88,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+
     }
 
     /**
@@ -91,8 +97,16 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
-        //
+        // $request->user()->can('delete');
+        $this->authorize('delete', $user);
+
+        try {
+            $user->delete();
+        } catch (\Exception $e) {
+            return response()->json($e, 500);
+        }
+        return response()->json($user, 200);
     }
 }
