@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::namespace('API')->group(function() {
-    Route::middleware(['throttle:60'])->group(function () {
+    Route::middleware(['throttle:60'])->group(function () {/*  */
         Route::apiResource('user', 'UserController');
+        Route::apiResource('checklist', 'ChecklistController');
     });
 });

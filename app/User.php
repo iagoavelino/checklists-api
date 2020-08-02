@@ -8,6 +8,22 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * App\User
+ * 
+ * @property string first_name
+ * @property string last_name
+ * @property string nickname
+ * @property string address
+ * @property string address_complement
+ * @property string email
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property \Carbon\Carbon|null $deleted_at
+ * 
+ *  
+ */
+
 class User extends Authenticatable
 {
     use SoftDeletes, HasApiTokens;
@@ -42,5 +58,14 @@ class User extends Authenticatable
 
     public function isAdmin(){
         return Admin::where('user_id', $this->id)->exists();
+    }
+
+    public function checklists(){
+        return $this->hasMany(Checklist::class);
+    }
+
+    public function createChecklist($checklistData){
+        $checklist = $this->checklists()->create($checklistData);
+        return $checklist;
     }
 }
