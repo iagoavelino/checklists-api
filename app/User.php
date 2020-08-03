@@ -63,9 +63,4 @@ class User extends Authenticatable
     public function checklists(){
         return $this->hasMany(Checklist::class);
     }
-
-    public function createChecklist($checklistData){
-        $checklist = $this->checklists()->create($checklistData);
-        return $checklist;
-    }
 }

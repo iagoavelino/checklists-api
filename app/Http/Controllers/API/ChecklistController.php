@@ -45,15 +45,15 @@ class ChecklistController extends Controller
             return response()->json(['errors' => $validator->errors()], Response::HTTP_BAD_REQUEST);
         }
 
-        /** @var User $user, $checklistOwner */
-        $user = Auth::user();
+        /** @var User $loggedUser */
+        $loggedUser = Auth::user();
         $checklistOwner = User::find($request->user_id);
 
         /** Guarantees that users can only create checklist for themselves (unless this
          * is an admin user)
         */
-        $isChecklistOwner = $user->id == $checklistOwner->id;
-        $isAdmin = $user->isAdmin();
+        $isChecklistOwner = $loggedUser->id == $checklistOwner->id;
+        $isAdmin = $loggedUser->isAdmin();
 
         $canCreateChecklist = $isChecklistOwner || $isAdmin;
 
@@ -68,7 +68,7 @@ class ChecklistController extends Controller
             'is_template'
         ]);
 
-        $checklist = $checklistOwner->createChecklist($checklistData);
+        $checklist = Checklist::create($checklistData);
 
         return $checklist;
     }
