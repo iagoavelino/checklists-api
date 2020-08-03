@@ -17,6 +17,7 @@ class CreateChecklistsTable extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('is_template')->default(false);
+            $table->boolean('is_completed')->default(false);
             $table->unsignedBigInteger('user_id')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
