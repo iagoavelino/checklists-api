@@ -16,8 +16,6 @@ class UsersSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        /** Creating Admin Users */
-
         for($i = 1; $i <= 10;  $i++) {
             factory(User::class)->create();
         }
